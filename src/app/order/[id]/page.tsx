@@ -248,7 +248,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                 <div>
                   <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
                     <Download className="w-4 h-4 text-emerald-700" />
-                    <span>ดาวน์โหลดไฟล์ E-book แบบชั่วคราว</span>
+                    <span>ดาวน์โหลดไฟล์โปรแกรม (.exe) แบบชั่วคราว</span>
                   </h4>
                   <p className="text-xs text-emerald-800 mt-1">
                     ลิงก์ชั่วคราวถูกสร้างขึ้นเพื่อความปลอดภัย (หมดอายุใน 15 นาที)
@@ -263,7 +263,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition active:scale-95"
                   >
                     <Download className="w-4 h-4" />
-                    <span>คลิกดาวน์โหลด E-book ทันที</span>
+                    <span>คลิกดาวน์โหลดไฟล์ .exe ทันที</span>
                   </a>
                 ) : (
                   <span className="text-xs text-gray-400">ไม่พบโทเค็นดาวน์โหลด</span>

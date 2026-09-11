@@ -59,7 +59,7 @@ create policy "Allow update for demo mock payment"
 -- 4. Initial Seed Data
 insert into public.books (id, title, subtitle, author, price, cover_color, description, pages, format)
 values
-  ('vibe-coding-101', 'Vibe Coding 101', 'คู่มือเขียนโค้ดร่วมกับ AI ให้เสร็จไวและมีทิศทาง', 'Prasert Dev', 199, 'from-blue-600 to-indigo-800', 'เรียนรู้วิธีแบ่งงาน prompt ทีละสเต็ป คุม AI ให้อยู่ในขอบเขต ตรวจโค้ดอย่างมั่นใจ และสร้างระบบจริงได้ในเวลาจำกัด', 145, 'PDF (Digital Edition)'),
-  ('nextjs-supabase-mastery', 'Next.js & Supabase Mastery', 'สร้าง Fullstack App ระดับโปร รวดเร็ว ปลอดภัย', 'Somchai Tech', 289, 'from-emerald-600 to-teal-800', 'เทคนิคการเชื่อมต่อ Database, ออกแบบ RLS Policy, Server Actions และระบบ Storage อย่างกระชับ พร้อม Deploy ขึ้น Vercel', 210, 'PDF (Digital Edition)'),
-  ('app-inventor-wrapper', 'Mobile Wrapper with App Inventor', 'แปลง Web สู่ Mobile App APK ภายใน 15 นาที', 'Anan Mobile Lab', 149, 'from-amber-500 to-orange-700', 'คู่มือนำเว็บ Production มาทำเป็น Android App ด้วย MIT App Inventor จัดการ WebViewer, ปุ่มย้อนกลับ และส่งไฟล์ APK', 98, 'PDF (Digital Edition)')
+  ('tarot-app', 'Tarot Reading PRO 🔮', 'โปรแกรมทำนายดวงไพ่ยิปซี 3 ใบ (อดีต, ปัจจุบัน, อนาคต) พร้อมดนตรีประกอบ', 'Desktop AI Studio (HW3)', 199, 'from-purple-700 to-indigo-900', 'แอปพลิเคชัน Desktop สุ่มพยากรณ์ไพ่ยิปซี 3 ใบ ไม่ซ้ำกัน พร้อมระบบเล่นเพลงบรรยากาศ (BGM Engine) และระบบ Fallback ปลอดภัย พัฒนาด้วย Python PyQt6', 1, 'Windows Executable (.exe)'),
+  ('media-player-pro', 'Media Player PRO 🎵', 'ระบบจัดการและเล่นสื่อมีเดียเดสก์ท็อป พร้อมระบบ Playlist ขั้นสูง', 'Desktop AI Studio (HW3)', 249, 'from-blue-600 to-cyan-900', 'โปรแกรมเล่นเพลงและจัดการคิวเพลงระดับโปร รองรับการเพิ่มหลายไฟล์, เลื่อนไทม์ไลน์แบบเรียลไทม์, ปรับระดับเสียง, และสถาปัตยกรรมแยกส่วน Audio Core', 1, 'Windows Executable (.exe)'),
+  ('task-manager-pro', 'SQLite Task Manager PRO 📋', 'ระบบจัดการงานและฐานข้อมูลเดสก์ท็อป เชื่อมต่อ SQLite Database', 'Desktop AI Studio (HW3)', 179, 'from-emerald-700 to-teal-900', 'โปรแกรมจัดการ To-Do List และ Task ประจำวัน บันทึกสถานะงานลงฐานข้อมูล SQLite ปลอดภัย ค้นหาและกรองสถานะงานได้อย่างรวดเร็ว', 1, 'Windows Executable (.exe)')
 on conflict (id) do nothing;

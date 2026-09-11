@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 import { BOOKS } from "@/data/books";
 
 import { getOrderByDownloadToken } from "@/lib/server-orders";
@@ -49,34 +51,38 @@ export async function GET(
   }
 
   const book = BOOKS.find((b) => b.id === matchedOrder.bookId);
+  const targetFileName = book?.downloadFileName || `${matchedOrder.bookId}.exe`;
+  const filePath = path.join(process.cwd(), "downloads", targetFileName);
 
-  // Return a sample text/pdf/markdown format e-book content
-  const content = `=====================================================
-  E-BOOK DIGITAL EDITION (DEMO SYSTEM)
+  if (fs.existsSync(filePath)) {
+    const fileBuffer = fs.readFileSync(filePath);
+    return new NextResponse(fileBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/vnd.microsoft.portable-executable",
+        "Content-Disposition": `attachment; filename="${targetFileName}"`,
+        "Content-Length": fileBuffer.length.toString(),
+      },
+    });
+  }
+
+  // Fallback if binary is not packaged on serverless host
+  const fallbackNotice = `=====================================================
+  HW 3 DESKTOP APP DOWNLOAD (DEMO)
 =====================================================
-ชื่อหนังสือ: ${book?.title || matchedOrder.bookTitle}
-ผู้แต่ง: ${book?.author || "ทีมผู้พัฒนา"}
+โปรแกรม: ${book?.title || matchedOrder.bookTitle}
 คำสั่งซื้อ: ${matchedOrder.id}
-ผู้ซื้อ: ${matchedOrder.customerName} (${matchedOrder.customerEmail})
-วันที่ดาวน์โหลด: ${new Date().toLocaleString("th-TH")}
+ผู้รับสิทธิ์: ${matchedOrder.customerName} (${matchedOrder.customerEmail})
+ไฟล์: ${targetFileName}
 =====================================================
-
-[บทที่ 1: การเตรียมตัวและสถาปัตยกรรมระบบ]
-ระบบนี้พัฒนาขึ้นด้วยหลักการ Vibe Coding:
-1. การระบุ Requirement ที่กระชับและตรวจสอบได้
-2. การแยกส่วน Client, Server และ Database (Supabase)
-3. การจัดการ Mock Payment อย่างปลอดภัย มีป้าย DEMO ONLY ชัดเจน
-4. การสร้าง Temporary Download Link สำหรับส่งมอบไฟล์
-5. การเชื่อมต่อ WebViewer บน Android ด้วย MIT App Inventor
-
-ขอแสดงความยินดีที่คุณได้ทดสอบกระบวนการสั่งซื้อ E-book สำเร็จสมบูรณ์!
+การดาวน์โหลดสำเร็จในระบบสาธิต!
 `;
 
-  return new NextResponse(content, {
+  return new NextResponse(fallbackNotice, {
     status: 200,
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${matchedOrder.bookId || "ebook"}.txt"`,
+      "Content-Disposition": `attachment; filename="${targetFileName}.txt"`,
     },
   });
 }
