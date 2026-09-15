@@ -51,38 +51,48 @@ export async function GET(
   }
 
   const book = BOOKS.find((b) => b.id === matchedOrder.bookId);
-  const targetFileName = book?.downloadFileName || `${matchedOrder.bookId}.exe`;
-  const filePath = path.join(process.cwd(), "downloads", targetFileName);
+  const targetFileName = book?.downloadFileName || `${matchedOrder.bookId}.pdf`;
+  
+  // Search in downloads directory and public/downloads
+  const pathsToTry = [
+    path.join(process.cwd(), "downloads", targetFileName),
+    path.join(process.cwd(), "public", "downloads", targetFileName),
+  ];
 
-  if (fs.existsSync(filePath)) {
-    const fileBuffer = fs.readFileSync(filePath);
-    return new NextResponse(fileBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/vnd.microsoft.portable-executable",
-        "Content-Disposition": `attachment; filename="${targetFileName}"`,
-        "Content-Length": fileBuffer.length.toString(),
-      },
-    });
+  for (const filePath of pathsToTry) {
+    if (fs.existsSync(/* turbopackIgnore: true */ filePath)) {
+      const fileBuffer = fs.readFileSync(/* turbopackIgnore: true */ filePath);
+      const isPdf = targetFileName.endsWith(".pdf");
+      return new NextResponse(fileBuffer, {
+        status: 200,
+        headers: {
+          "Content-Type": isPdf ? "application/pdf" : "application/octet-stream",
+          "Content-Disposition": `attachment; filename="${encodeURIComponent(targetFileName)}"`,
+          "Content-Length": fileBuffer.length.toString(),
+        },
+      });
+    }
   }
 
-  // Fallback if binary is not packaged on serverless host
+  // Fallback notice
   const fallbackNotice = `=====================================================
-  HW 3 DESKTOP APP DOWNLOAD (DEMO)
+  HW 4 E-BOOK DOWNLOAD CONFIRMATION (DEMO)
 =====================================================
-โปรแกรม: ${book?.title || matchedOrder.bookTitle}
+หนังสือ: ${book?.title || matchedOrder.bookTitle}
 คำสั่งซื้อ: ${matchedOrder.id}
-ผู้รับสิทธิ์: ${matchedOrder.customerName} (${matchedOrder.customerEmail})
+ผู้สั่งซื้อ: ${matchedOrder.customerName} (${matchedOrder.customerEmail})
 ไฟล์: ${targetFileName}
+สถานะ: ชำระเงินเรียบร้อย (PAID)
 =====================================================
-การดาวน์โหลดสำเร็จในระบบสาธิต!
+ระบบสาธิต Vibe Coding: E-book Shop (HW 4)
+สถาปัตยกรรม Desktop AI Agent: ${book?.subtitle || ""}
 `;
 
   return new NextResponse(fallbackNotice, {
     status: 200,
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${targetFileName}.txt"`,
+      "Content-Disposition": `attachment; filename="${encodeURIComponent(targetFileName)}.txt"`,
     },
   });
 }

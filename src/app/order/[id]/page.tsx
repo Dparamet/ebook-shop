@@ -154,19 +154,30 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
           </div>
 
           {/* Details Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-xs">
-            <div>
-              <span className="text-gray-400 block mb-0.5">หนังสือที่สั่งซื้อ</span>
-              <span className="font-semibold text-gray-800">{order.bookTitle}</span>
-            </div>
-            <div>
-              <span className="text-gray-400 block mb-0.5">ชื่อผู้รับ / อีเมล</span>
-              <span className="font-semibold text-gray-800">{order.customerName}</span>
-              <span className="text-gray-500 block truncate">{order.customerEmail}</span>
-            </div>
-            <div>
-              <span className="text-gray-400 block mb-0.5">ยอดชำระ</span>
-              <span className="text-lg font-extrabold text-blue-600">฿{order.amount}</span>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4 text-xs border-t border-gray-100">
+            {BOOKS.find((b) => b.id === order.bookId)?.coverImage && (
+              <div className="w-14 h-18 rounded-lg overflow-hidden border border-gray-200 shadow-xs flex-shrink-0 bg-gray-100">
+                <img
+                  src={BOOKS.find((b) => b.id === order.bookId)?.coverImage}
+                  alt={order.bookTitle}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1">
+              <div>
+                <span className="text-gray-400 block mb-0.5">หนังสือที่สั่งซื้อ</span>
+                <span className="font-semibold text-gray-800">{order.bookTitle}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 block mb-0.5">ชื่อผู้รับ / อีเมล</span>
+                <span className="font-semibold text-gray-800">{order.customerName}</span>
+                <span className="text-gray-500 block truncate">{order.customerEmail}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 block mb-0.5">ยอดชำระ</span>
+                <span className="text-lg font-extrabold text-blue-600">฿{order.amount}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -248,10 +259,10 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                 <div>
                   <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
                     <Download className="w-4 h-4 text-emerald-700" />
-                    <span>ดาวน์โหลดไฟล์โปรแกรม (.exe) แบบชั่วคราว</span>
+                    <span>ดาวน์โหลดไฟล์คู่มือ E-Book (PDF) แบบชั่วคราว</span>
                   </h4>
                   <p className="text-xs text-emerald-800 mt-1">
-                    ลิงก์ชั่วคราวถูกสร้างขึ้นเพื่อความปลอดภัย (หมดอายุใน 15 นาที)
+                    ลิงก์ชั่วคราวถูกสร้างขึ้นเพื่อความปลอดภัยตาม Requirement (มีอายุ 15 นาที)
                   </p>
                 </div>
 
@@ -263,7 +274,7 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition active:scale-95"
                   >
                     <Download className="w-4 h-4" />
-                    <span>คลิกดาวน์โหลดไฟล์ .exe ทันที</span>
+                    <span>คลิกดาวน์โหลด E-book (.pdf) ทันที</span>
                   </a>
                 ) : (
                   <span className="text-xs text-gray-400">ไม่พบโทเค็นดาวน์โหลด</span>

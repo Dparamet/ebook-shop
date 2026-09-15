@@ -168,10 +168,12 @@ function CheckoutContent() {
             <h3 className="font-bold text-gray-900 text-sm mb-4">สรุปรายการคำสั่งซื้อ</h3>
 
             <div className="flex gap-4 items-center pb-4 border-b border-gray-100">
-              <div
-                className={`w-14 h-18 rounded-lg bg-gradient-to-br ${currentBook.coverColor} flex items-center justify-center text-white text-xs font-bold shadow-xs flex-shrink-0 text-center p-1`}
-              >
-                PDF
+              <div className="w-16 h-20 rounded-lg overflow-hidden border border-gray-200 shadow-xs flex-shrink-0 bg-gray-100">
+                <img
+                  src={currentBook.coverImage}
+                  alt={currentBook.title}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="min-w-0 flex-1">
                 <h4 className="font-bold text-gray-900 text-sm truncate">{currentBook.title}</h4>
