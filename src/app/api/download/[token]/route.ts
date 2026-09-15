@@ -59,15 +59,22 @@ export async function GET(
     path.join(process.cwd(), "public", "downloads", targetFileName),
   ];
 
+  const { searchParams } = new URL(request.url);
+  const isInline = searchParams.get("view") === "1";
+
   for (const filePath of pathsToTry) {
     if (fs.existsSync(/* turbopackIgnore: true */ filePath)) {
       const fileBuffer = fs.readFileSync(/* turbopackIgnore: true */ filePath);
       const isPdf = targetFileName.endsWith(".pdf");
+      const disposition = isInline
+        ? `inline; filename="${encodeURIComponent(targetFileName)}"`
+        : `attachment; filename="${encodeURIComponent(targetFileName)}"`;
+
       return new NextResponse(fileBuffer, {
         status: 200,
         headers: {
           "Content-Type": isPdf ? "application/pdf" : "application/octet-stream",
-          "Content-Disposition": `attachment; filename="${encodeURIComponent(targetFileName)}"`,
+          "Content-Disposition": disposition,
           "Content-Length": fileBuffer.length.toString(),
         },
       });

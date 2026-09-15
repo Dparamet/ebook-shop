@@ -17,6 +17,7 @@ import {
   Copy,
   Check,
   AlertTriangle,
+  ExternalLink,
 } from "lucide-react";
 
 export default function OrderPage({ params }: { params: Promise<{ id: string }> }) {
@@ -64,11 +65,21 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
     }
   };
 
+  const [copiedLink, setCopiedLink] = useState(false);
+
   const copyOrderId = () => {
     if (!order) return;
     navigator.clipboard.writeText(order.id);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copyDownloadLink = () => {
+    if (!order?.downloadToken) return;
+    const fullUrl = `${window.location.origin}/api/download/${order.downloadToken}`;
+    navigator.clipboard.writeText(fullUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2500);
   };
 
   if (loading) {
@@ -255,30 +266,63 @@ export default function OrderPage({ params }: { params: Promise<{ id: string }> 
               </div>
 
               {/* Download Action */}
-              <div className="mt-6 p-5 bg-emerald-50 rounded-2xl border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
-                    <Download className="w-4 h-4 text-emerald-700" />
-                    <span>ดาวน์โหลดไฟล์คู่มือ E-Book (PDF) แบบชั่วคราว</span>
-                  </h4>
-                  <p className="text-xs text-emerald-800 mt-1">
-                    ลิงก์ชั่วคราวถูกสร้างขึ้นเพื่อความปลอดภัยตาม Requirement (มีอายุ 15 นาที)
-                  </p>
+              <div className="mt-6 p-5 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-sm flex items-center gap-1.5">
+                      <Download className="w-4 h-4 text-emerald-700" />
+                      <span>ดาวน์โหลดไฟล์คู่มือ E-Book (PDF) แบบชั่วคราว</span>
+                    </h4>
+                    <p className="text-xs text-emerald-800 mt-1">
+                      ลิงก์ชั่วคราวถูกสร้างขึ้นเพื่อความปลอดภัยตาม Requirement (มีอายุ 15 นาที)
+                    </p>
+                  </div>
+
+                  {order.downloadToken ? (
+                    <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                      <a
+                        href={`/api/download/${order.downloadToken}`}
+                        download
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow transition active:scale-95 cursor-pointer"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>ดาวน์โหลด (.pdf)</span>
+                      </a>
+
+                      <a
+                        href={`/api/download/${order.downloadToken}?view=1`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-50 font-bold text-xs transition active:scale-95"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span>เปิดอ่าน PDF</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={copyDownloadLink}
+                        className="inline-flex items-center justify-center gap-1 px-3 py-2.5 rounded-xl bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-semibold transition cursor-pointer"
+                      >
+                        {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedLink ? "คัดลอกแล้ว" : "คัดลอกลิงก์"}</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-400">ไม่พบโทเค็นดาวน์โหลด</span>
+                  )}
                 </div>
 
-                {order.downloadToken ? (
-                  <a
-                    href={`/api/download/${order.downloadToken}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition active:scale-95"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>คลิกดาวน์โหลด E-book (.pdf) ทันที</span>
-                  </a>
-                ) : (
-                  <span className="text-xs text-gray-400">ไม่พบโทเค็นดาวน์โหลด</span>
-                )}
+                {/* Mobile App notice */}
+                <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
+                  <ShieldAlert className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold">หมายเหตุสำหรับ Mobile App (MIT App Inventor):</span>
+                    <p className="mt-0.5">
+                      ตามข้อจำกัดของ WebViewer ในใบงานหน้า 5 แนะนำให้กดปุ่ม <strong>&quot;คัดลอกลิงก์&quot;</strong> เพื่อนำไปเปิดดาวน์โหลดใน Chrome ของมือถือ หรือเปิดผ่านอีเมลจำลองด้านล่าง
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
